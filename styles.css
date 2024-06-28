@@ -15,17 +15,21 @@ body {
 
 .calculator {
     background-color: pink;
-    height: 400px;
     width: 300px;
     border-radius: 20px;
     padding: 20px;
 }
 
 .calculator-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: aliceblue ;
     height: 80px;
     border-radius: 20px;
     margin-bottom: 20px;
+    font-size: 50px;
+    color: #b1c0c7;
 }
 
 .buttons {
@@ -49,3 +53,9 @@ body {
     width: 68px;
     border-radius: 20px;
 }
+
+#C {
+    margin-left: auto;
+}
+
+
