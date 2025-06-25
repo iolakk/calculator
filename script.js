@@ -1,5 +1,6 @@
 const calculatorDigitButtons = document.querySelectorAll('.number');
 const calculatorOperatorButtons = document.querySelectorAll('.operator');
+const calculatorSpecialButtons = document.querySelectorAll('.special');
 const calculatorScreen = document.querySelector('.screen');
 const screenCurrentNumber = document.querySelector('.current-number');
 const screenEquation = document.querySelector('.equation');
@@ -67,6 +68,13 @@ function cleanUp() {
     screenEquation.textContent = '';
 }
 
+function clearAll() {
+    firstNumber = ''
+    secondNumber = ''
+    screenEquation.textContent = '';
+    screenCurrentNumber.textContent = '';
+}
+
 calculatorDigitButtons.forEach((button) => {
     button.addEventListener('click', (e) => {
         displayNumber(e.target.textContent)
@@ -81,6 +89,19 @@ calculatorOperatorButtons.forEach((button) => {
             firstNumber = String(operate(firstNumber, secondNumber, operator));
             screenCurrentNumber.textContent = firstNumber;
             cleanUp();
+        }
+    })
+})
+
+calculatorSpecialButtons.forEach((button) => {
+    button.addEventListener('click', (e) => {
+        switch(e.target.textContent) {
+            case 'AC':
+                clearAll();
+                break;
+            case 'C':
+                screenCurrentNumber.textContent = '';
+                break;
         }
     })
 })
