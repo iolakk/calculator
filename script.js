@@ -5,6 +5,9 @@ const calculatorScreen = document.querySelector('.screen');
 const screenCurrentNumber = document.querySelector('.current-number');
 const screenEquation = document.querySelector('.equation');
 
+const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const operators = ['+', '-', '*', '/', '='];
+
 let firstNumber = '';
 let secondNumber = '';
 let operator = '';
@@ -33,10 +36,10 @@ function operate(a, b, operator) {
         case '-':
             return subtract(+a, +b);
             break;
-        case '×':
+        case '*':
             return multiply(+a, +b);
             break;
-        case '÷':
+        case '/':
             return divide(+a, +b);
             break;
     }
@@ -56,6 +59,7 @@ function displayNumber(num) {
 }
 
 function displayOperator(op) {;
+    if(screenCurrentNumber.textContent.length > 11) return;
     if(op === '=') return;
     operator = op;
     screenEquation.textContent += `${firstNumber} ${operator}`
@@ -75,23 +79,34 @@ function clearAll() {
     screenCurrentNumber.textContent = '';
 }
 
+function backspace() {
+    let displayNumber = screenCurrentNumber.textContent
+    screenCurrentNumber.textContent = displayNumber.slice(0, displayNumber.length - 1)
+
+    if (firstNumber !== '' && operator !== '') secondNumber = screenCurrentNumber.textContent;
+    else firstNumber = screenCurrentNumber.textContent;
+}
+
+function evaluateResult(event) {
+    if(operator === '') {
+        displayOperator(event);
+    } else if(secondNumber !== '') {
+        firstNumber = String(operate(firstNumber, secondNumber, operator));
+        screenCurrentNumber.textContent = firstNumber.slice(0, 12);;
+        cleanUp();
+    }
+}
+
 calculatorDigitButtons.forEach((button) => {
     button.addEventListener('click', (e) => {
         // Limit numbers to 12
-        if(screenCurrentNumber.textContent.length > 11) return;
         displayNumber(e.target.textContent)
     })
 })
 
 calculatorOperatorButtons.forEach((button) => {
     button.addEventListener('click', (e) => {
-        if(operator === '') {
-            displayOperator(e.target.textContent);
-        } else if(secondNumber !== '') {
-            firstNumber = String(operate(firstNumber, secondNumber, operator));
-            screenCurrentNumber.textContent = firstNumber.slice(0, 12);;
-            cleanUp();
-        }
+        evaluateResult(e.target.textContent)
     })
 })
 
@@ -106,4 +121,14 @@ calculatorSpecialButtons.forEach((button) => {
                 break;
         }
     })
+})
+
+document.addEventListener('keydown', (e) => {
+    if(keys.includes(e.key)) {
+        displayNumber(e.key);
+    } else if(operators.includes(e.key)) {
+        evaluateResult(e.key)
+    } else if(e.key === 'Backspace') {
+        backspace();
+    }
 })
