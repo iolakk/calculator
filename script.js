@@ -14,6 +14,22 @@ function divide(a, b) {
     return a / b;
 }
 
+function operate(a, b, operator) {
+    switch(operator) {
+        case '+':
+            return add(a, b);
+            break;
+        case '-':
+            return subtract(a, b);
+            break;
+        case '*':
+            return multiply(a, b);
+            break;
+        case '/':
+            return divide(a, b);
+    }
+}
+
 let firstNumber = 0;
 let secondNumber = 0;
 let operator = '';
