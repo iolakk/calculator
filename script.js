@@ -1,8 +1,11 @@
-const calculatorButtons = document.querySelectorAll('.buttons');
+const calculatorDigitButtons = document.querySelectorAll('.number');
+const calculatorOperatorButtons = document.querySelectorAll('.operator');
 const calculatorScreen = document.querySelector('.screen');
+const screenCurrentNumber = document.querySelector('.current-number');
+const screenEquation = document.querySelector('.equation');
 
-let firstNumber = 0;
-let secondNumber = 0;
+let firstNumber = '';
+let secondNumber = '';
 let operator = '';
 
 function add(a, b) {
@@ -24,30 +27,60 @@ function divide(a, b) {
 function operate(a, b, operator) {
     switch(operator) {
         case '+':
-            return add(a, b);
+            return add(+a, +b);
             break;
         case '-':
-            return subtract(a, b);
+            return subtract(+a, +b);
             break;
-        case '*':
-            return multiply(a, b);
+        case '×':
+            return multiply(+a, +b);
             break;
         case '÷':
-            return divide(a, b);
+            return divide(+a, +b);
+            break;
     }
 }
 
 function displayNumber(num) {
-    // Check if the button that was pressed is a number
-    const numbers = '0123456789';
-    if (!numbers.includes(num)) return;
-
-    calculatorScreen.textContent += num;
-    firstNumber = calculatorScreen.textContent;
+    // check if number is a dot
+    if (num === '.') {
+        // if it is a dot check whether there are currently any numbers or if there is already a dot
+        if(screenCurrentNumber.textContent === '' || screenCurrentNumber.textContent.includes('.')) {
+            return;
+        }
+    }
+    screenCurrentNumber.textContent += num;
+    if (firstNumber !== '' && operator !== '') secondNumber = screenCurrentNumber.textContent;
+    else firstNumber = screenCurrentNumber.textContent;
 }
 
-calculatorButtons.forEach((button) => {
+function displayOperator(op) {;
+    if(op === '=') return;
+    operator = op;
+    screenEquation.textContent += `${firstNumber} ${operator}`
+    screenCurrentNumber.textContent = '';
+}
+
+function cleanUp() {
+    secondNumber = '';
+    operator = '';
+    screenEquation.textContent = '';
+}
+
+calculatorDigitButtons.forEach((button) => {
     button.addEventListener('click', (e) => {
         displayNumber(e.target.textContent)
+    })
+})
+
+calculatorOperatorButtons.forEach((button) => {
+    button.addEventListener('click', (e) => {
+        if(operator === '') {
+            displayOperator(e.target.textContent);
+        } else if(secondNumber !== '') {
+            firstNumber = String(operate(firstNumber, secondNumber, operator));
+            screenCurrentNumber.textContent = firstNumber;
+            cleanUp();
+        }
     })
 })
