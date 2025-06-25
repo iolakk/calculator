@@ -77,6 +77,8 @@ function clearAll() {
 
 calculatorDigitButtons.forEach((button) => {
     button.addEventListener('click', (e) => {
+        // Limit numbers to 12
+        if(screenCurrentNumber.textContent.length > 11) return;
         displayNumber(e.target.textContent)
     })
 })
@@ -87,7 +89,7 @@ calculatorOperatorButtons.forEach((button) => {
             displayOperator(e.target.textContent);
         } else if(secondNumber !== '') {
             firstNumber = String(operate(firstNumber, secondNumber, operator));
-            screenCurrentNumber.textContent = firstNumber;
+            screenCurrentNumber.textContent = firstNumber.slice(0, 12);;
             cleanUp();
         }
     })
